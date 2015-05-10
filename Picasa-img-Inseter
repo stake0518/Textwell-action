@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <meta content="initial-scale=1" name="viewport">
+
+    <title>Picasa img Inserter</title>
+    <style>
+.img-class{border:1px solid #999;margin:2px}#item{text-align:center}
+    </style>
+</head>
+
+<body>
+    <div id="item"></div><script type='text/javascript'>
+//<![CDATA[
+    //コンフィグ 入力した値を適用します
+
+    //ユーザーID !入力必須!
+    var user_id = "104933607558801180381";
+
+    /*[アルバム選択]true,false
+    最初にアルバムを選ぶかどうか trueならアルバムの選択肢を毎回表示,falseなら下記の[デフォルトアルバム]のアルバムナンバーを適用*/
+    var choice_album = true;
+
+    /*[デフォルトアルバム]数値
+    上記の[アルバム選択]でfalseにした場合のみ有効
+    アクション起動時、最初に表示させるアルバム
+    */
+    var album_number = 5;
+
+    /*[デフォルトアルバムバリュー]数値
+    上記の[アルバム選択]でtrueにした場合のみ有効
+    テキストボックスに表示させる初期値を出力*/
+    var default_album_number = 5;
+
+    /*[画像表示数]"数値",""空,"auto","all"
+    表示させる画像の件数を入力,空ならテキストボックスから毎回手動入力,autoなら最新100件のみ,allなら全ての表示*/
+    var stack_size_photos = "100";
+
+    /*[元画像取得サイズ]"数値","d",""空,
+    *オリジナルサイズを指定する場合は"d",空にした場合は毎回入力ボックスで手動入力*/
+    var size = "640";
+
+    /*[画像幅]"数値",""空,"none"
+    *空で毎回入力ボックスで手動入力 noneにした場合は付与しない*/
+    var height = "320",
+    width = "none";
+
+    /*[代替テキスト]""空,"auto","none","cap"
+    *空にした場合は毎回入力ボックスで手動入力,autoにした場合はカーソル行にあるテキストを挿入,noneにした場合は付与しない,capにした場合は画像のキャプションを使用する*/
+    var alt = "cap";
+
+    /*[タイトル]true,false
+    *trueで[代替テキスト]に従う,falseで付与しない*/
+    var title = true;
+
+    /*[ブロッククラス]"クラス名",""空,"none"
+    *空で毎回クラス名を手動入力,noneで付与しない*/
+    var block_class = "img-div";
+
+    /*[イメージクラス]"クラス名",""空,"none"
+    *空で毎回クラス名を手動入力,noneで付与しない*/
+    var img_class = "img-class";
+
+    /*[デフォルト入力値]s="取得サイズ",h="画像縦幅",w="画像横幅",a="代替テキスト",bc="ブロッククラス名",ic="イメージクラス名"*/
+    var s_default = "640",
+    h_default = "320",
+    w_default = "320",
+    a_default = "デフォルト代替テキスト",
+    bc_default = "div-class",
+    ic_default = "img-class";
+
+    //コンフィグ ここまで
+    clip = T.pboard;
+    current = T.current;
+
+    //入力チェック
+    function valCheck(caption) {
+    check: if (user_id != "") {
+    //サイズ
+    if (size == "") {
+      sub_size = prompt("取得サイズを入力", s_default);
+      if (sub_size) {
+        i_size = "s" + sub_size;
+      } else {
+        break check;
+      }
+    } else if (size == "d") {
+      i_size = "d";
+    } else {
+      i_size = "s" + size;
+    }
+
+    //画像縦幅
+    if (height == "") {
+      sub_height = prompt("縦幅を入力", h_default);
+      if (sub_height) {
+        i_height = " height='" + sub_height + "'";
+      } else {
+        break check;
+      }
+    } else if (height == "none") {
+      i_height = "";
+    } else {
+      i_height = " height='" + height + "'";
+    }
+    //画像横幅
+    if (width == "") {
+      sub_width = prompt("横幅を入力", w_default);
+      if (sub_width) {
+        i_width = " width='" + sub_width + "'";
+      } else {
+        break check;
+      }
+    } else if (width == "none") {
+      i_width = "";
+    } else {
+      i_width = " width='" + width + "'";
+    }
+    //代替テキスト
+    if (alt == "") {
+      sub_alt = prompt("代替テキストを入力", a_default);
+      if (sub_alt) {
+        sub2_alt = sub_alt;
+      } else {
+        break check;
+      }
+      i_alt = " alt='" + sub2_alt + "'";
+    } else if (alt == "auto") {
+      i_alt = " alt='" + T.current + "'";
+    } else if (alt == "none") {
+      i_alt = "";
+    } else if (alt == "cap") {
+      i_alt = " alt='" + caption + "'";
+    } else {
+      i_alt = " alt='" + alt + "'";
+    }
+    //タイトル
+    if (title) {
+      if (alt == "") {
+        i_title = " title='" + sub2_alt + "'";
+      } else if (alt == "auto") {
+        i_title = " title='" + current + "'";
+      } else if (alt == "none") {
+        i_title = "";
+      } else if (alt == "cap") {
+        i_title = " title='" + caption + "'";
+      } else {
+        i_title = " title='" + alt + "'";
+      }
+    } else {
+      i_title = "";
+    }
+
+    //ブロッククラス
+    if (block_class == "") {
+      sub_block_class = prompt("imgを囲むdivクラス名を入力", bc_default);
+      if (sub_block_class) {
+        i_div_top = "<div class='" + sub_block_class + "'>";
+        i_div_bottom = "<\/div" + ">";
+      } else {
+        break check;
+      }
+    } else if (block_class == "none") {
+      i_div_top = "";
+      i_div_bottom = "";
+    } else {
+      i_div_top = "<div class='" + block_class + "'>";
+      i_div_bottom = "<\/div" + ">";
+    }
+
+    //イメージクラス
+    if (img_class == "") {
+      sub_img_class = prompt("imgクラス名を入力");
+      if (sub_img_class) {
+        i_class = " class='" + sub_img_class + "'";
+      } else {
+        break check;
+      }
+    } else if (img_class == "none") {
+      i_class = "";
+    } else {
+      i_class = " class='" + img_class + "'";
+    }
+    }
+
+    }
+
+    //画像スクリプト呼び出し
+    function photoScript(json_src) {
+    var photo_script = document.createElement('script');
+    photo_script.type = 'text/javascript';
+    photo_script.src = json_src;
+    document.body.appendChild(photo_script);
+    }
+
+    //画像呼び出し
+    function callbackPhotos(data) {
+    data.feed.entry.forEach(function(call) {
+    var img = document.createElement('img');
+    img.src = call.media$group.media$thumbnail[0].url;
+    img.alt = call.media$group.media$description.$t;
+    img.className = "img-class";
+    img.height = "72";
+    img.width = "72";
+
+    img.addEventListener("click",
+    function() {
+      getUrl(this.src, this.id, this.alt)
+    },
+    false);
+    document.getElementById("item").insertBefore(img, document.getElementById("item").firstChild);
+
+    });
+    }
+
+    //アルバム呼び出し
+    function callbackAlbums(data) {
+    var data_a = data.feed.entry;
+    if (choice_album) {
+    var entry_title = [],
+    entry_id = [];
+    for (i = 0; i < data_a.length; i++) {
+      entry_title.push(i + 1 + "." + data_a[i].title.$t);
+      entry_id.push(data_a[i].gphoto$id.$t);
+    }
+    var data_array = entry_title.join("\n"),
+    a_name = prompt(data_array, default_album_number);
+
+    if (a_name) {
+      var submit_id = data_a[a_name - 1].gphoto$id.$t;
+    } else {
+      var submit_id = data_a[album_number - 1].gphoto$id.$t;
+      var a_name = album_number - 1;
+    }
+
+    //choice_album if(true)-end-
+    } else {
+    var submit_id = data_a[album_number - 1].gphoto$id.$t;
+    var a_name = album_number - 1;
+    }
+    //choice_album -end-
+    //Stack photos
+    var count_photos, max_entry, start_entry, intmax = parseInt(data_a[a_name - 1].gphoto$numphotos.$t, 10);
+
+    if (stack_size_photos == "") {
+    count_photos = prompt("画像の表示数を入力", 100);
+    if (!count_photos) {
+      count_photos = 100;
+    }
+    if (count_photos < intmax) {
+      max_entry = count_photos,
+      start_entry = intmax - count_photos;
+    } else {
+      max_entry = count_photos,
+      start_entry = 1;
+    }
+    } else if (stack_size_photos == "auto") {
+    if (100 < intmax) {
+      max_entry = 100,
+      start_entry = intmax - 100;
+    } else {
+      max_entry = 100,
+      start_entry = 1;
+    }
+    } else if (stack_size_photos == "all") {
+    max_entry = 1000,
+    start_entry = 1;
+    } else {
+    if (stack_size_photos < intmax) {
+      max_entry = stack_size_photos,
+      start_entry = intmax - stack_size_photos;
+    } else {
+      max_entry = stack_size_photos,
+      start_entry = 1;
+    }
+    }
+    //Stack Photo -end-
+    buildSrc(submit_id, max_entry, start_entry);
+    }
+
+    //imgタグ生成
+    function getUrl(obj_src, obj_id, obj_alt) {
+
+    valCheck(obj_alt);
+
+    http = obj_src.substr(0, 4) + obj_src.substr(5);
+
+    img_src = http.substr(0, http.indexOf('/s72') + 1) + i_size + http.substr(http.indexOf('/s72') + 4);
+
+    insert_tag = i_div_top + "<img src='" + img_src + "'" + i_class + i_height + i_width + i_alt + i_title + " />" + i_div_bottom;
+
+    if (alt == "auto") {
+    T("replaceCurrent", {
+      text: insert_tag
+    });
+    } else {
+    T("insert", {
+      text: insert_tag
+    });
+    }
+    }
+
+    //アルバムスクリプト呼び出し
+    function jsonAlbums(entrynum, albumid) {
+    if (user_id) {
+    var albums_json = document.createElement('script');
+    albums_json.type = 'text/javascript';
+    albums_json.src = "http://picasaweb.google.com/data/feed/api/user/" + user_id + "?kind=album&alt=json-in-script&callback=callbackAlbums&start-index=1&max-results=1000";
+    document.body.appendChild(albums_json);
+    } else {
+    alert("ソース編集からPicasaユーザーIDを入力してください。");
+    }
+
+    }
+
+    //スクリプトソース生成
+    function buildSrc(albumid, max, start) {
+    photoScript("https://picasaweb.google.com/data/feed/api" + "/user/" + user_id + "/albumid/" + albumid + "?alt=json-in-script&callback=callbackPhotos&max-results=" + max + "&start-index=" + start);
+    }
+
+    jsonAlbums();
+
+    //]]>
+    </script>
+</body>
+</html>
