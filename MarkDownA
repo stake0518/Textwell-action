@@ -1,0 +1,79 @@
+<style>body{vertical-align:middle;text-align:center}</style><script src="https://raw.githubusercontent.com/chjj/marked/master/marked.min.js"></script><script>
+
+/*******
+コンフィグ['属性','スタイル名']
+属性は'class' 'id' ''空 のいずれかを指定
+********/
+var 
+p = ['class','p1'],
+h1 = ['class','head1'],
+h2 = ['class','head2'],
+h3 = ['class','head3'],
+h4 = ['class','head4'],
+h5 = ['class','head5'],
+h6 = ['class','head6'],
+ul = ['class','ul1'],
+ol = ['class','ol1'],
+div = ['class','div1'],
+blockquote = ['class','bq1'],
+table = ['class','table1'],
+pre = ['class','pre1'],
+img = ['class','img1'],
+span = ['class','span1'],
+a = ['class','a1'],
+s = ['class','s1'],
+b = ['class','b1'],
+strong = ['class','st1'],
+em = ['class','em1'],
+u = ['class','u1'],
+del = ['class','del1'],
+hr = ['class','hr1'];
+/****
+コンフィグここまで
+*****/
+
+function swText(attr,style) {
+  switch(attr) {
+    case '' :
+      set_tag = '';
+      break;
+    case 'class' :
+    case 'id' :
+      set_tag = ' '+attr+'="'+style+'"';
+      break;
+  }
+  return set_tag;
+}
+
+var md = marked(T.current);
+
+var d = md.replace(/\<p/mg,'<p'+swText(p[0],p[1]))
+.replace(/\<h1/mg,'<h1'+swText(h1[0],h1[1]))
+.replace(/\<h2/mg,'<h2'+swText(h2[0],h2[1]))
+.replace(/\<h3/mg,'<h3'+swText(h3[0],h3[1]))
+.replace(/\<h4/mg,'<h4'+swText(h4[0],h4[1]))
+.replace(/\<h5/mg,'<h5'+swText(h5[0],h5[1]))
+.replace(/\<h6/mg,'<h6'+swText(h6[0],h6[1]))
+.replace(/\<ul/mg,'<ul'+swText(ul[0],ul[1]))
+.replace(/\<ol/mg,'<ol'+swText(ol[0],ol[1]))
+.replace(/\<div/mg,'<div'+swText(div[0],div[1]))
+.replace(/\<blockquote/mg,'<blockquote'+swText(blockquote[0],blockquote[1]))
+.replace(/\<table/mg,'<table'+swText(table[0],table[1]))
+.replace(/\<pre/mg,'<pre'+swText(pre[0],pre[1]))
+.replace(/\<img/mg,'<img'+swText(img[0],img[1]))
+.replace(/\<span/mg,'<span'+swText(span[0],span[1]))
+.replace(/\<a /mg,'<a'+swText(a[0],a[1])+' ')
+.replace(/\<s\>/mg,'<s'+swText(s[0],s[1])+'>')
+.replace(/\<b\>/mg,'<b'+swText(b[0],b[1])+'>')
+.replace(/\<strong/mg,'<strong'+swText(strong[0],strong[1]))
+.replace(/\<em/mg,'<em'+swText(em[0],em[1]))
+.replace(/\<u\>/mg,'<u'+swText(u[0],u[1])+'>')
+.replace(/\<del/mg,'<del'+swText(del[0],del[1]))
+.replace(/\<hr/mg,'<hr'+swText(hr[0],hr[1]))
+;
+
+T('replaceCurrent',{
+  text:d
+});
+
+</script>
