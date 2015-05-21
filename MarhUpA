@@ -1,0 +1,681 @@
+<meta name=viewport content=initial-scale=1>
+<title></title>
+<style type='text/css'>
+    body,
+    html {
+        margin: 0;
+        border: none
+    }
+    
+    table {
+        table-layout: fixed;
+        font-size: 12px;
+        width: 100%;
+        position: fixed;
+        bottom: 0
+    }
+    
+    td {
+        border: 1px solid #888;
+        height: 48px;
+        background: #eee;
+        padding: auto 0;
+        text-align: center;
+        vertical-align: middle
+    }
+    
+    #header {
+        margin-bottom: 260px;
+        font-size: 16px;
+        background: #eee;
+        padding: 15px
+    }
+    
+    .close {
+        display: none
+    }
+    
+    .open {}
+    
+    .bt {
+        background: #CAE5A4;
+        display: block
+    }
+</style>
+
+<script>
+    //コンフィグ
+
+    /*********
+    以下idやクラスなどの属性の指定と、そのスタイル名の指定を使用するタグ別に入力してください
+    例: ◯_attr  = '属性'
+    例: ◯_style = 'スタイル名'
+    属性は'class','id','none'を指定できます
+    *********/
+
+    //文章
+    var p_attr = ['class', 'id', 'none'];
+    var p_style = ["p1", "p2", "p3"];
+
+    //見出し ※左からh1,h2,h3……h6
+    var h_attr = ['class', 'class', 'class', 'class', 'class', 'class'];
+    var h_style = ['head1', 'head2', 'head3', 'head4', 'head5', 'head6'];
+
+    //ブロック1 div1,div2,div3
+    var d_attr = ['class', 'class', 'class'];
+    var d_style = ["div1", "div2", "div3"];
+
+    //ブロック2 blockquote,section,article
+    var d2_attr = ['class', 'class', 'class'];
+    var d2_style = ['bq1', 'sect1', 'artc1'];
+
+    //文字装飾1 span,b,strong
+    var t1_attr = ['class', 'class', 'class'];
+    var t1_style = ["sp1", "b1", "st1"];
+
+    //文字装飾2 u,s,del
+    var t2_attr = ['class', 'class', 'class'];
+    var t2_style = ["u1", "s1", "del1"];
+
+    //リスト ul1,ul2,ol
+    var l_attr = ['class', 'class', 'class'];
+    var l_style = ["ul1", "ul2", "ol1"];
+
+    //コード pre,code,pre+code(preに挿入)
+    var c_attr = ['class', 'class', 'class'];
+    var c_style = ["pre1", "code1", "p_code1"];
+
+    //画像 img,a+img(imgに挿入)
+    var i_attr = ['class', 'class'];
+    var i_style = ["img1", "img2"];
+
+    //アンカー a , a+jump
+    var a_attr = ['class', 'class'];
+    var a_style = ["a1", "a2"];
+
+    //水平線 hr
+    var hr_attr = 'none';
+    var hr_style = "hr1";
+
+    //引用blockquote
+    var bq_attr = 'class';
+    var bq_style = 'bq1';
+
+    //テーブル table
+    var tb_attr = 'class';
+    var tb_style = 'tb1';
+
+    //定型文 定型1,定型2,定型3 
+    /*********
+    ps_tagは定型文を囲むタグ
+    ps_textは挿入するテキスト
+    *********/
+    var ps_attr = ['class', 'class', 'class'];
+    var ps_style = ["ps1", "ps2", "ps3"];
+    var ps_tag = ["p", "p", "div"];
+    var ps_text = [
+        "一つめの定型文をここに入力",
+        "二つめの定型文をここに入力",
+        "三つめの定型文をここに入力"
+    ];
+
+    //よく使うタグ 開始タグ,閉じタグ
+    var d_tag = ['<p class="p1">', '</p>']
+
+    /*********
+    コンフィグここまで
+    *********/
+</script>
+
+<body>
+    <header id="header" contenteditable="true"></header>
+
+    <table>
+        <tr id="dtr1" class="close">
+            <td class="bt" onclick="mainRep('blockquote',0)">block
+                <br />quote</td>
+            <td class="bt" onclick="mainRep('section',1)">section</td>
+            <td class="bt" onclick="mainRep('article',2)">article</td>
+
+        </tr>
+        <tr id="dtr2" class="close">
+            <td class="bt" onclick="mainRep('div',0)">div 1</td>
+            <td class="bt" onclick="mainRep('div',1)">div 2</td>
+            <td class="bt" onclick="mainRep('div',2)">div 3</td>
+
+        </tr>
+        <tr id="htr1" class="close">
+            <td class="bt" onclick="mainRep('h1',0)">h1</td>
+            <td class="bt" onclick="mainRep('h2',1)">h2</td>
+            <td class="bt" onclick="mainRep('h3',2)">h3</td>
+
+        </tr>
+        <tr id="htr2" class="close">
+            <td class="bt" onclick="mainRep('h4',3)">h4</td>
+            <td class="bt" onclick="mainRep('h5',4)">h5</td>
+            <td class="bt" onclick="mainRep('h6',5)">h6</td>
+
+        </tr>
+        <tr id="ptr" class="close">
+            <td class="bt" onclick="mainRep('p',0)">p 1</td>
+            <td class="bt" onclick="mainRep('p',1)">p 2</td>
+            <td class="bt" onclick="mainRep('p',2)">p 3</td>
+
+        </tr>
+        <tr id="t1tr" class="close">
+            <td class="bt" onclick="mainRep('span',0)">span</td>
+            <td class="bt" onclick="mainRep('b',1)">b</td>
+            <td class="bt" onclick="mainRep('strong',2)">strong</td>
+
+        </tr>
+        <tr id="t2tr" class="close">
+            <td class="bt" onclick="mainRep('u',0)">u</td>
+            <td class="bt" onclick="mainRep('s',1)">s</td>
+            <td class="bt" onclick="mainRep('del',2)">del</td>
+
+        </tr>
+        <tr id="litr" class="close">
+            <td class="bt" onclick="liRep()" colspan="3">リスト 単体</td>
+        </tr>
+        </tr>
+        <tr id="ultr" class="close">
+            <td class="bt" onclick="subRep('ul',0)">ul li</td>
+            <td class="bt" onclick="subRep('ul',1)">ul li 2</td>
+            <td class="bt" onclick="subRep('ol',2)">ol li</td>
+        </tr>
+
+        </tr>
+        <tr id="ctr" class="close">
+            <td class="bt" onclick="mainRep('pre',0)">pre</td>
+            <td class="bt" onclick="mainRep('code',1)">code</td>
+            <td class="bt" onclick="subRep('pre',2)">pre+code</td>
+
+        </tr>
+        <tr id="itr" class="close">
+            <td class="bt" onclick="imgRep('img',0)">img</td>
+            <td class="bt" onclick="imgRep('img',1)">a+img</td>
+            <td class="bt" onclick="piiAction()">Picasa img
+                <br />Inserter</td>
+
+        </tr>
+        <tr id="atr" class="close">
+            <td class="bt" onclick="aRep('a',0)">a</td>
+            <td class="bt" onclick="aRep('a',1)">a jump</td>
+            <td class="bt" onclick="aRep('id',2)">jump ID</td>
+
+        </tr>
+        <tr id="bftr" class="close">
+            <td class="bt" onclick="bfRep('br')">br</td>
+            <td class="bt" onclick="bfRep('hr')">hr</td>
+            <td class="bt" onclick="bfRep('div')">clear</td>
+
+        </tr>
+        <tr id="pstr" class="close">
+            <td class="bt" onclick="psRep('0')">定型文1</td>
+            <td class="bt" onclick="psRep('1')">定型文2</td>
+            <td class="bt" onclick="psRep('2')">定型文3</td>
+
+        </tr>
+        <tr id="tbtr" class="close">
+            <td class="bt" onclick="tbRep('table','0')">表に変換</td>
+            <td class="bt" onclick="cellRep('row')">縦に結合</td>
+            <td class="bt" onclick="cellRep('col')">横に結合</td>
+
+        </tr>
+        <tr id="ottr" class="close">
+            <td class="bt" onclick="location.href='http://pipes.mosap.net/pipes/markupa'">ヘルプ</td>
+            <td class="bt" onclick="escTxt()">特殊文字
+                <br />変換</td>
+            <td class="bt" onclick="insTxt('cmt')">コメント化</td>
+
+            <tr>
+                <td onclick="openTr('dtr1','dtr2')">ブロック</td>
+                <td onclick="openTr('htr1','htr2')">見出し</td>
+                <td onclick="openTr('ptr')">段落</td>
+
+            </tr>
+            <tr>
+                <td onclick="openTr('t1tr')">文字装飾1</td>
+                <td onclick="openTr('t2tr')">文字装飾2</td>
+                <td onclick="openTr('ultr','litr')">リスト</td>
+
+            </tr>
+            <tr>
+                <td onclick="openTr('ctr')">コード</td>
+                <td onclick="openTr('itr')">画像</td>
+                <td onclick="openTr('atr')">アンカー</td>
+
+            </tr>
+            <tr>
+                <td onclick="openTr('bftr')">整形</td>
+                <td onclick="openTr('pstr')">定型文</td>
+                <td onclick="openTr('tbtr')">テーブル</td>
+
+            </tr>
+            <tr>
+                <td onclick="openTr('ottr')">その他</td>
+                <td onclick="insTxt('tag')" colspan="2">よく使うタグ</td>
+
+            </tr>
+    </table>
+
+    <script>
+        var result = escAll(T.current);
+
+        var target = T.current;
+        document.getElementById("header").innerHTML = result;
+
+        function openTr(e, f) {
+            var obj = document.getElementById(e);
+
+            obj.className = (obj.className == "close") ?
+                "open" : "close";
+
+            if (f) {
+                var obj2 = document.getElementById(f);
+                obj2.className = (obj2.className == "close") ?
+                    "open" : "close";
+            }
+
+        }
+
+        //Attr
+        function getAttr(type) {
+
+            switch (type) {
+                case 'class':
+                    attr_type = ' class="';
+                    break;
+                case 'id':
+                    attr_type = ' id="';
+                    break;
+
+                default:
+                    break;
+            }
+
+            return attr_type;
+
+        }
+
+        //Get tag
+        function getTag(tag, num) {
+
+            switch (tag) {
+                case 'div':
+                    set_attr = d_attr[num];
+                    set_style = d_style[num];
+                    break;
+                case 'blockquote':
+                case 'section':
+                case 'article':
+                    set_attr = d2_attr[num];
+                    set_style = d2_style[num];
+                    break;
+                case 'h1':
+                case 'h2':
+                case 'h3':
+                case 'h4':
+                case 'h5':
+                case 'h6':
+                    set_attr = h_attr[num];
+                    set_style = h_style[num];
+                    break;
+                case 'p':
+                    set_attr = p_attr[num];
+                    set_style = p_style[num];
+                    break;
+                case 'hr':
+                    set_attr = hr_attr[num];
+                    set_style = hr_style[num];
+                    break;
+                case 'span':
+                case 'b':
+                case 'strong':
+                    set_attr = t1_attr[num];
+                    set_style = t1_style[num];
+                    break;
+                case 'u':
+                case 's':
+                case 'del':
+                    set_attr = t2_attr[num];
+                    set_style = t2_style[num];
+                    break;
+                case 'ul':
+                case 'ol':
+                    set_attr = l_attr[num];
+                    set_style = l_style[num];
+                    break;
+                case 'pre':
+                case 'code':
+                    set_attr = c_attr[num];
+                    set_style = c_style[num];
+                    break;
+                case 'img':
+                    set_attr = i_attr[num];
+                    set_style = i_style[num];
+                    break;
+                case 'a':
+                    set_attr = a_attr[num];
+                    set_style = a_style[num];
+                    break;
+                case 'blockquote':
+                    set_attr = bq_attr;
+                    set_style = bq_style;
+                    break;
+                case 'table':
+                    set_attr = tb_attr[num]
+                default:
+                    break;
+            }
+
+            return [set_attr, set_style];
+
+        }
+
+        //Main
+        function mainRep(tag, num) {
+
+            var t = document.getElementById("header").textContent;
+
+            var tag_attr = getTag(tag, num);
+
+            if (tag_attr[0] != 'none') {
+
+                var suf = '"',
+                    at_type = getAttr(tag_attr[0]);
+
+            } else {
+                var suf = at_type = tag_attr[1] = '';
+            }
+
+            T("replaceCurrent", {
+                text: '<' + tag + at_type + tag_attr[1] + suf + '>' + t + '</' + tag + '>'
+            });
+
+        }
+
+        //Sub
+        function subRep(tag, num) {
+
+            var t = document.getElementById("header").textContent;
+            var tag_attr = getTag(tag, num);
+
+            var ctag;
+            switch (tag) {
+                case "ul":
+                    ctag = "li";
+                    break;
+                case "ol":
+                    ctag = "li"
+                    break;
+                case "pre":
+                    ctag = "code"
+                    break;
+                case "a":
+                    ctag = "img";
+            }
+
+            if (tag_attr[0] != 'none') {
+
+                var suf = '"',
+                    at_type = getAttr(tag_attr[0]);
+
+            } else {
+                var suf = at_type = tag_attr[1] = '';
+            }
+
+            T("replaceCurrent", {
+                text: '<' + tag + at_type + tag_attr[1] + suf + '>\n<' + ctag + '>' + t + '</' + ctag + '>\n</' + tag + '>'
+            });
+
+        }
+
+        //List only
+        function liRep() {
+
+            var t = document.getElementById("header").textContent;
+
+            if (t != '') {
+                var s = t.replace(/\n/mg, '</li>\n<li>');
+
+                T('replaceCurrent', {
+                    text: '<li>' + s + '</li>'
+                });
+
+            } else {
+                var num = prompt('挿入するリスト数を入力', 5),
+                    lists = '';
+
+                for (i = 0; i < num; i++) {
+                    lists = lists + '<li></li>\n';
+                }
+
+                T('insert', {
+                    text: lists
+                });
+
+            }
+        }
+
+        //Image
+        function imgRep(tag, num) {
+
+            var t = document.getElementById("header").textContent;
+            var tag_attr = getTag(tag, num);
+
+            if (tag_attr[0] != 'none') {
+
+                var suf = '"',
+                    at_type = getAttr(tag_attr[0]);
+
+            } else {
+                var suf = at_type = tag_attr[1] = '';
+            }
+
+            if (num == 0) {
+
+                T("replaceCurrent", {
+                    text: '<' + tag + at_type + tag_attr[1] + suf + ' src="' + T.pboard + '" alt="' + t + '" />'
+                });
+
+            } else {
+
+                T("replaceCurrent", {
+                    text: '<a href="' + T.pboard + '" target="_blank"><' + tag + at_type + tag_attr[1] + suf + ' src="' + T.pboard + '" alt="' + t + '" /><' + '/a>'
+                });
+
+            }
+        }
+
+        //Anchor
+        function aRep(tag, num) {
+
+            var t = document.getElementById("header").textContent;
+
+            if (num != 2) {
+
+                var link, target, rel,
+                    tag_attr = getTag(tag, num);
+
+                if (tag_attr[0] != 'none') {
+                    var suf = '"',
+                        at_type = getAttr(tag_attr[0])
+                } else {
+                    var suf = at_type = tag_attr[1] = '';
+                }
+
+
+                if (num != 0) {
+
+                    link = '#' + prompt('ジャンプ先の指定', '_');
+                    target = '';
+                    rel = '';
+
+                } else {
+
+                    link = T.pboard;
+                    target = ' target="_blank"';
+                    rel = ' rel="nofollow"';
+
+                }
+
+                T('replaceCurrent', {
+                    text: '<a href="' + link + '"' + at_type + tag_attr[1] + suf + target + rel + '>' + t + '</a>'
+                });
+
+            } else {
+
+                /*    var link = prompt('ジャンプ先のIDを入力','_'),*/
+                var in_id = t.replace(/\>/, ' id="' + prompt("ジャンプ先のIDを入力", "_") + '">');
+
+
+                T('replaceCurrent', {
+                    text: in_id
+                        /*
+                          text: ' id="' + link + '" '
+                        */
+                });
+
+            }
+
+        }
+
+        //br hr clear
+        function bfRep(tag) {
+
+            if (hr_attr != 'none' && tag == 'hr') {
+
+                var suf = '"',
+                    at_type = getAttr(hr_attr),
+                    tag_attr = hr_style;
+
+            } else {
+
+                if (tag == 'div') {
+                    var suf = '"',
+                        at_type = ' style="clear' + ':' + 'both';
+                } else {
+                    var suf = at_type = '';
+                }
+                var tag_attr = '';
+
+            }
+
+
+            T('insert', {
+                text: '<' + tag + at_type + tag_attr + suf + ' />'
+            });
+
+        }
+
+        //Fixed phrase
+        function psRep(ps_num) {
+
+            var tag = ps_tag[+ps_num];
+
+            if (ps_attr[ps_num] != 'none') {
+                var suf = '"',
+                    at_type = getAttr(ps_attr[ps_num]),
+                    tag_attr = ps_style[ps_num];
+            } else {
+                var suf = at_type = tag_attr = '';
+            }
+
+            T('insert', {
+                text: '<' + tag + at_type + tag_attr + suf + '>' + ps_text[ps_num] + '</' + tag + '>'
+            });
+
+        }
+
+        //Table
+        function tbRep(tag, num) {
+
+            var t = document.getElementById("header").textContent;
+
+            if (tb_attr != 'none') {
+
+                var suf = '"',
+                    at_type = ' ' + tb_attr + '="';
+                tag_attr = tb_style;
+
+            } else {
+                var suf = at_type = tag_attr = '';
+            }
+
+            var s = t
+                .replace(/\\\\/mg, '</th>\n<th>')
+                .replace(/\|\|/mg, '</td>\n<td>')
+                .replace(/\\\|/mg, '</th>\n<td>')
+                .replace(/\|\\/mg, '</td>\n<th>')
+                .replace(/\\\n/mg, '</th>\n</tr>\n<tr>\n')
+                .replace(/\|\n/mg, '</td>\n</tr>\n<tr>\n')
+                .replace(/\\/mg, '<th>')
+                .replace(/\|/mg, '<td>');
+
+            T('replaceCurrent', {
+                text: '<table' + at_type + tag_attr + suf + '><tr>\n' + s + '\n</tr></table>'
+            });
+
+        }
+
+        function cellRep(vh) {
+
+            var t = document.getElementById("header").textContent,
+                span, cell;
+
+            (vh == 'row') ? span = ' rowspan="': span = ' colspan="';
+
+            if (/th/.test(t)) {
+                cell = t.replace(/\<th/g, '<th' + span + prompt("縦に結合するセル数を入力", "3") + '"');
+            } else {
+                cell = t.replace(/\<td/g, '<td' + span + prompt("横に結合するセル数を入力", "3") + '"');
+            }
+
+            T('replaceCurrent', {
+                text: cell
+            });
+
+        }
+
+        function escAll(txt) {
+
+            var t_cur = txt;
+            var e = document.createElement('DIV');
+            var t = document.createTextNode(t_cur);
+            e.appendChild(t);
+            var esc_txt = e.innerHTML;
+
+            return esc_txt;
+        }
+
+        function escTxt() {
+
+            var t = document.getElementById("header").textContent;
+            con_text = escAll(t);
+
+            T('replaceCurrent', {
+                text: con_text
+            });
+
+        }
+
+        function insTxt(d) {
+
+            var t = document.getElementById("header").textContent;
+
+            if (d == 'cmt') {
+                var pre = '<!-- ',
+                    suf = ' -->';
+            } else {
+                var pre = d_tag[0],
+                    suf = d_tag[1];
+                t = t.replace(/\n/mg, suf + '\n' + pre);
+            }
+
+            T('replaceCurrent', {
+                text: pre + t + suf
+            });
+        }
+    </script>
+</body>
